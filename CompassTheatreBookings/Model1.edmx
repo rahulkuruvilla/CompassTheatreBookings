@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BookingSystemDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblBookings">
+          <Key>
+            <PropertyRef Name="BookingID" />
+          </Key>
+          <Property Name="BookingID" Type="int" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Seat" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblEnquires">
+          <Key>
+            <PropertyRef Name="commentID" />
+          </Key>
+          <Property Name="commentID" Type="int" Nullable="false" />
+          <Property Name="AdminMessage" Type="bit" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblSeats">
+          <Key>
+            <PropertyRef Name="SeatNum" />
+          </Key>
+          <Property Name="SeatNum" Type="int" Nullable="false" />
+          <Property Name="Row" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Column" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblUserList">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="9" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tblBookings_To_tblSeats">
+          <End Role="tblSeats" Type="Self.tblSeats" Multiplicity="1" />
+          <End Role="tblBookings" Type="Self.tblBookings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSeats">
+              <PropertyRef Name="SeatNum" />
+            </Principal>
+            <Dependent Role="tblBookings">
+              <PropertyRef Name="Seat" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBookings_To_tblUserList">
+          <End Role="tblUserList" Type="Self.tblUserList" Multiplicity="1" />
+          <End Role="tblBookings" Type="Self.tblBookings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUserList">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="tblBookings">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BookingSystemDataModelStoreContainer">
+          <EntitySet Name="tblBookings" EntityType="Self.tblBookings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblEnquires" EntityType="Self.tblEnquires" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSeats" EntityType="Self.tblSeats" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUserList" EntityType="Self.tblUserList" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblBookings_To_tblSeats" Association="Self.FK_tblBookings_To_tblSeats">
+            <End Role="tblSeats" EntitySet="tblSeats" />
+            <End Role="tblBookings" EntitySet="tblBookings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBookings_To_tblUserList" Association="Self.FK_tblBookings_To_tblUserList">
+            <End Role="tblUserList" EntitySet="tblUserList" />
+            <End Role="tblBookings" EntitySet="tblBookings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BookingSystemDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblBooking">
+          <Key>
+            <PropertyRef Name="BookingID" />
+          </Key>
+          <Property Name="BookingID" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Seat" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblSeat" Relationship="Self.FK_tblBookings_To_tblSeats" FromRole="tblBookings" ToRole="tblSeats" />
+          <NavigationProperty Name="tblUserList" Relationship="Self.FK_tblBookings_To_tblUserList" FromRole="tblBookings" ToRole="tblUserList" />
+        </EntityType>
+        <EntityType Name="tblEnquire">
+          <Key>
+            <PropertyRef Name="commentID" />
+          </Key>
+          <Property Name="commentID" Type="Int32" Nullable="false" />
+          <Property Name="AdminMessage" Type="Boolean" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblSeat">
+          <Key>
+            <PropertyRef Name="SeatNum" />
+          </Key>
+          <Property Name="SeatNum" Type="Int32" Nullable="false" />
+          <Property Name="Row" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Column" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblBookings" Relationship="Self.FK_tblBookings_To_tblSeats" FromRole="tblSeats" ToRole="tblBookings" />
+        </EntityType>
+        <EntityType Name="tblUserList">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="9" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblBookings" Relationship="Self.FK_tblBookings_To_tblUserList" FromRole="tblUserList" ToRole="tblBookings" />
+        </EntityType>
+        <Association Name="FK_tblBookings_To_tblSeats">
+          <End Role="tblSeats" Type="Self.tblSeat" Multiplicity="1" />
+          <End Role="tblBookings" Type="Self.tblBooking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSeats">
+              <PropertyRef Name="SeatNum" />
+            </Principal>
+            <Dependent Role="tblBookings">
+              <PropertyRef Name="Seat" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBookings_To_tblUserList">
+          <End Role="tblUserList" Type="Self.tblUserList" Multiplicity="1" />
+          <End Role="tblBookings" Type="Self.tblBooking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUserList">
+              <PropertyRef Name="Username" />
+            </Principal>
+            <Dependent Role="tblBookings">
+              <PropertyRef Name="Username" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BookingSystemDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblBookings" EntityType="Self.tblBooking" />
+          <EntitySet Name="tblEnquires" EntityType="Self.tblEnquire" />
+          <EntitySet Name="tblSeats" EntityType="Self.tblSeat" />
+          <EntitySet Name="tblUserLists" EntityType="Self.tblUserList" />
+          <AssociationSet Name="FK_tblBookings_To_tblSeats" Association="Self.FK_tblBookings_To_tblSeats">
+            <End Role="tblSeats" EntitySet="tblSeats" />
+            <End Role="tblBookings" EntitySet="tblBookings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBookings_To_tblUserList" Association="Self.FK_tblBookings_To_tblUserList">
+            <End Role="tblUserList" EntitySet="tblUserLists" />
+            <End Role="tblBookings" EntitySet="tblBookings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BookingSystemDataModelStoreContainer" CdmEntityContainer="BookingSystemDataEntities">
+          <EntitySetMapping Name="tblBookings">
+            <EntityTypeMapping TypeName="BookingSystemDataModel.tblBooking">
+              <MappingFragment StoreEntitySet="tblBookings">
+                <ScalarProperty Name="BookingID" ColumnName="BookingID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Seat" ColumnName="Seat" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblEnquires">
+            <EntityTypeMapping TypeName="BookingSystemDataModel.tblEnquire">
+              <MappingFragment StoreEntitySet="tblEnquires">
+                <ScalarProperty Name="commentID" ColumnName="commentID" />
+                <ScalarProperty Name="AdminMessage" ColumnName="AdminMessage" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSeats">
+            <EntityTypeMapping TypeName="BookingSystemDataModel.tblSeat">
+              <MappingFragment StoreEntitySet="tblSeats">
+                <ScalarProperty Name="SeatNum" ColumnName="SeatNum" />
+                <ScalarProperty Name="Row" ColumnName="Row" />
+                <ScalarProperty Name="Column" ColumnName="Column" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUserLists">
+            <EntityTypeMapping TypeName="BookingSystemDataModel.tblUserList">
+              <MappingFragment StoreEntitySet="tblUserList">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
